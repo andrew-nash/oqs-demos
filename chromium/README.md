@@ -113,8 +113,8 @@ blink_symbol_level=0
 
 ### Shipping binary
 
-If all steps outlined above have been successfully executed, an identical command to that for Ubuntu can be run within the directory `<CHROMIUM_ROOT>/out/Default` and the resulting `zip` archive can be moved to a suitable machine with all UI components for execution. 
+If all steps outlined above have been successfully executed, a similar command to that for Ubuntu can be run within the directory `<CHROMIUM_ROOT>/out/` and the resulting `zip` archive can be moved to a suitable machine with all UI components for execution. 
 
 THe command to do so is a follows, ommitting some files unnecessary to the execution of the binary
 
-```tar --exclude=windows-release.zip --exclude='obj/*' --exclude='gen/*' --exclude=v8_context_snapshot_generator --exclude=mksnapshot --exclude=make_top_domain_list_variables --exclude=toolchain.ninja --exclude='*__pycache__*' -czvf windows-release.zip *```
+```zip -r windows-release.zip . -x obj/\* -x gen/\* -x toolchain.ninja -x "v8_context_snapshot_generator.*" -x mksnapshot.* -x make_top_domain_list_variables.*  -x "*__pycache__*" ```
