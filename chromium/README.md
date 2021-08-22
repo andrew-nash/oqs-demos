@@ -1,3 +1,5 @@
+# Ubuntu
+
 This directory contains instructions and corresponding patches to build the Chromium web browser using the [OQS-BoringSSL fork](https://github.com/open-quantum-safe/boringssl), thereby enabling Chromium to use quantum-safe key exchange algorithms. Note that these instructions have been tested only on Ubuntu 18, 19, and 20 (x86_64) installations and apply at present only to a subset of quantum-safe key-exchanges as [documented here](https://github.com/open-quantum-safe/boringssl#key-exchange).
 
 Further be aware that both cloning the source code as well as building Chromium can take several hours if you do not have excellent network connectivity and serious multicore CPUs at your disposal: The download has a size of over 40GB and even a size-and-performance optimized build (see note below) takes 1143 CPU user minutes on a 2.6GHz i7 CPU, i.e. something like 300 minutes or 5 hours on a quad-core system.
@@ -63,3 +65,48 @@ Note: In order to avoid certificate warnings, you need to [download the test sit
 ### Shipping binary
 
 If all steps outlined above have been successfully executed, one can extract a standalone binary distribution by running `tar czvf chromium-binary.tgz *` within the directory `<CHROMIUM_ROOT>/out/Default` and moving the resulting `tgz` archive to a suitable machine with all UI components for execution. In order to not transfer too many unnecessary files, passing the options `--exclude='obj/*' --exclude='gen/*' --exclude=v8_context_snapshot_generator --exclude=mksnapshot --exclude=make_top_domain_list_variables --exclude=toolchain.ninja --exclude='*__pycache__*' ` to the `tar` command eliminates many files that are not essential for correct operation of a binary Chromium (v94) release.
+
+# Windows
+
+The process for building on windows is almost exactly the same, with a few small differences.
+
+0. Ensure the system requirements listed [here](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/windows_build_instructions.md). To summarise:
+    a. Install  Visual Studio Community 2019, with the “Desktop development with C++” worklspace, making sure to add the optional component for MFC/ATL support.
+    b. Download and install the Windows 10 SDK, (tested for 10.0.19041), adding the SDK Debugging Tools option.
+    c. Ensure working installs of **both** python2 and python3
+    d. Install Perl and Go compilers (NASM was also installed, but is unlikely to be necessary - further testing required to determine if it was used)
+   
+ 1. To obtain the source code, follow the instructions in the "Install depot_tools" and "Get the code" sections. Note: Do *not* set `--no-history` to save time as you need git history in the next step.
+
+2. Navigate to the root directory of the source code, which we will refer to hereafter as `<CHROMIMUM_ROOT>`, and run `git checkout 94.0.4602.0`, which is the latest tag for which we have verified the build instructions. Then, to ensure that all of chromium's third party dependencies are compatible with this tag, run `gclient sync`.
+
+
+3. Navigate to `<CHROMIUM_ROOT>/third_party/boringssl/src`, and switch the BoringSSL source code to the OQS-BoringSSL fork by running the following commands:
+
+- `git remote add oqs-bssl https://github.com/open-quantum-safe/boringssl`
+- `git fetch oqs-bssl`
+- `git checkout -b oqs-bssl-master oqs-bssl/master`
+
+4. In a directory of your choosing, clone and build liboqs as follows:
+
+- `git clone --branch main https://github.com/open-quantum-safe/liboqs.git`
+- `cd liboqs && mkdir build && cd build`
+- `cmake .. -G"Ninja" -DCMAKE_INSTALL_PREFIX=<CHROMIUM_ROOT>/third_party/boringssl/src/oqs -DOQS_USE_OPENSSL=OFF`
+- `ninja && ninja install`
+    
+5. After successfully installing liboqs as per the above, navigate to `<CHROMIUM_ROOT>` and apply the `chromium94.windows.patch` file provided here by running `git apply <PATH_TO_PATCH_FILE>`. Then, navigate to `third_party/boringssl`, and run `python src/util/generate_build_files.py gn` - NOTE that this must be run with python 2, so ensure that `python` maps to python2 and `py` and/or `python3` map to python3.
+
+Note: For this to succeed, you might have to install go if not already present on your machine. If _any_ error occurs in this step, Chromium will build fine, just without support for quantum-safe crypto, i.e., only the final testing steps below will fail.
+
+6. Finally, navigate back to <CHROMIUM_ROOT> and run the following command to build Chromium `autoninja -C out\Default chrome`
+
+Note: If you have already built another chromium source tree (version), you may have to execute `gclient sync --force` to ensure all dependencies are properly updated.
+
+Note: It is *strongly* advisable to set certain build options to obtain a size-and-performance optimized chromium variant, also saving on build time. Do this by executing `gn args out/Default` and adding the following variables to the configuration file opened in your editor:
+```
+# Set build arguments here. See `gn help buildargs`.
+is_debug = false
+symbol_level = 0
+enable_nacl = false
+blink_symbol_level=0
+```
