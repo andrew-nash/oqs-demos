@@ -1,0 +1,16 @@
+diff --git a/util/generate_build_files.py b/util/generate_build_files.py
+index 2a4fc9693..e7f31cf7d 100644
+--- a/util/generate_build_files.py
++++ b/util/generate_build_files.py
+@@ -768,8 +768,9 @@ def PerlAsm(output_filename, input_filename, perlasm_style, extra_args):
+   base_dir = os.path.dirname(output_filename)
+   if not os.path.isdir(base_dir):
+     os.makedirs(base_dir)
+-  subprocess.check_call(
+-      ['perl', input_filename, perlasm_style] + extra_args + [output_filename])
++  os.system(' '.join( ['perl', input_filename, perlasm_style] + extra_args + [output_filename]))
++  #subprocess.check_call(
++  #      ['perl', input_filename, perlasm_style] + extra_args + [output_filename])
+ 
+ 
+ def ArchForAsmFilename(filename):
