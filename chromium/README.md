@@ -94,7 +94,7 @@ The process for building on windows is almost exactly the same, with a few small
 - `cmake .. -G"Ninja" -DCMAKE_INSTALL_PREFIX=<CHROMIUM_ROOT>/third_party/boringssl/src/oqs -DOQS_USE_OPENSSL=OFF`
 - `ninja && ninja install`
     
-5. After successfully installing liboqs as per the above, navigate to `<CHROMIUM_ROOT>` and apply the `chromium94.windows.patch` file provided here by running `git apply <PATH_TO_PATCH_FILE>`. Then, navigate to `third_party/boringssl`, and run `python src/util/generate_build_files.py gn` - NOTE that this must be run with python 2, so ensure that `python` maps to python2 and `py` and/or `python3` map to python3.
+5. After successfully installing liboqs as per the above, navigate to `<CHROMIUM_ROOT>` and apply the `chromium94.windows.patch` file provided here by running `git apply <PATH_TO_PATCH_FILE>`. Then navigate to `third_party/boringssl` and similarly apply the `gixBuildGen.patch` file. With this complete, run `python src/util/generate_build_files.py gn` - NOTE that this must be run with python 2, so ensure that `python` maps to python2 and `py` and/or `python3` map to python3. 
 
 Note: For this to succeed, you might have to install go if not already present on your machine. If _any_ error occurs in this step, Chromium will build fine, just without support for quantum-safe crypto, i.e., only the final testing steps below will fail.
 
