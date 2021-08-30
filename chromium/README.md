@@ -78,7 +78,7 @@ The process for building on windows is almost exactly the same, with a few small
    * Before proceeding, initialise the build environment with `"<PATH TO VISUAL STUDIO>\VC\Auxiliary\Build\vcvarsall.bat" x64` - e.g. `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64`
  
    
- 1. To obtain the source code, follow the instructions in the "Install depot_tools" and "Get the code" sections. Note: Do *not* set `--no-history` to save time as you need git history in the next step.
+ 1. To obtain the source code, follow the instructions in the "Install depot_tools" and "Get the code" sections [here](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/windows_build_instructions.md). Note: Do *not* set `--no-history` to save time as you need git history in the next step.
 
 2. Navigate to the root directory of the source code, which we will refer to hereafter as `<CHROMIMUM_ROOT>`, and run `git checkout 94.0.4602.0`, which is the latest tag for which we have verified the build instructions. Then, to ensure that all of chromium's third party dependencies are compatible with this tag, run `gclient sync`.
 
