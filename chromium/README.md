@@ -71,10 +71,12 @@ If all steps outlined above have been successfully executed, one can extract a s
 The process for building on windows is almost exactly the same, with a few small differences.
 
 0. Ensure the system requirements listed [here](https://chromium.googlesource.com/chromium/src/+/refs/heads/main/docs/windows_build_instructions.md). To summarise:
-   * Install  Visual Studio Community 2019, with the “Desktop development with C++” worklspace, making sure to add the optional component for MFC/ATL support.
+   * Install  Visual Studio Community 2019, with the “Desktop development with C++” workspace, making sure to add the optional components for MFC/ATL support.
    * Download and install the Windows 10 SDK, (tested for 10.0.19041), adding the SDK Debugging Tools option.
    * Ensure working installs of **both** python2 and python3
    * Install Perl and Go compilers (NASM was also installed, but is unlikely to be necessary - further testing required to determine if it was used)
+   * Before proceeding, initialise the build environment with `"<PATH TO VISUAL STUDIO>\VC\Auxiliary\Build\vcvarsall.bat" x64` - e.g. `"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" x64`
+ 
    
  1. To obtain the source code, follow the instructions in the "Install depot_tools" and "Get the code" sections. Note: Do *not* set `--no-history` to save time as you need git history in the next step.
 
